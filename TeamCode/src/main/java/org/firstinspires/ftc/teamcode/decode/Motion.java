@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Drive;
+package org.firstinspires.ftc.teamcode.decode;
 
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -208,10 +206,10 @@ public class Motion {
         public PinpointLocalizer (){
             odo = opMode.hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-            odo.setOffsets(6.16, -6.65, DistanceUnit.INCH);
+            odo.setOffsets(6.34, -7.28, DistanceUnit.INCH);
             odo.setYawScalar(1.002);  // 1.002 is for the v2. scalar for the v1 was 1.00167
             odo.resetPosAndIMU();
-            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         }
 
         @Override

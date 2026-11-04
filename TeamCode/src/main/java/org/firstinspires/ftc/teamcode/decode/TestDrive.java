@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.Drive;
+package org.firstinspires.ftc.teamcode.decode;
 
 import com.pedropathing.math.Pose;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,14 +11,19 @@ public class TestDrive  extends OpMode {
     private Motion bot;
     enum SpeedMode{SLOW, MED, FAST}
     private SpeedMode speedMode =  SpeedMode.SLOW;
+    private GoBildaPinpointDriver pinpoint;
 
     public void init(){
         bot = new Motion(this);
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         bot.setPose(new Pose(0,0,0));
+
 
     }
     public void loop(){
         bot.updateOdometry();
+        telemetry.addData("x ticks", pinpoint.getEncoderX());
+        telemetry.addData("Y ticks", pinpoint.getEncoderY());
 
         telemetry.addData("pose", "%.1f  %.1f  %.1f", bot.getPose().x(),
                 bot.getPose().y(), Math.toDegrees(bot.getPose().heading()));
