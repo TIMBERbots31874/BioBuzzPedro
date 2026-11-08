@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.pedro.pathutil;
 
+import com.pedropathing.api.Paths;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector;
 import com.pedropathing.math.Vector2D;
+import com.pedropathing.paths.Path;
 import com.pedropathing.paths.curves.Curve;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -27,6 +29,15 @@ public class Spline implements Curve {
 
     public Spline(double startDir, double endDir, Pose... poses){
         this(new ArrayList<>(Arrays.asList(poses)), startDir, endDir);
+    }
+
+
+    public static Path curve(double startDir, double endDir, Pose... poses){
+        return Paths.path(new Spline(startDir, endDir, poses));
+    }
+
+    public static Path curve(double startDir, double endDir, double cStart, double cEnd, Pose... poses){
+        return Paths.path(new Spline(startDir, endDir, cStart, cEnd, poses));
     }
 
     @Override
