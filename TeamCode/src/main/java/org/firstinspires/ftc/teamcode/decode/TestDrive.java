@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.decode;
 
+import static org.firstinspires.ftc.teamcode.biobuzz.Intake.IntakeState.REVERSE;
+import static org.firstinspires.ftc.teamcode.biobuzz.Intake.IntakeState.STOPPED;
+
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.biobuzz.Intake;
 
 @TeleOp
 public class TestDrive  extends OpMode {
@@ -12,14 +17,20 @@ public class TestDrive  extends OpMode {
     enum SpeedMode{SLOW, MED, FAST}
     private SpeedMode speedMode =  SpeedMode.SLOW;
     private GoBildaPinpointDriver pinpoint;
+    private Intake intake = new Intake();
+
+    Intake.IntakeState intakeState = STOPPED;
 
     public void init(){
         bot = new Motion(this);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class,"pinpoint");
         bot.setPose(new Pose(0,0,0));
 
-
+        intake.init(hardwareMap);
     }
+
+
+
     public void loop(){
         bot.updateOdometry();
         telemetry.addData("x ticks", pinpoint.getEncoderX());
@@ -46,6 +57,26 @@ public class TestDrive  extends OpMode {
         bot.setDrivePower(px,py,pa);
 
 
+        boolean lbWasPressed = gamepad1.leftBumperWasPressed();
+        boolean rbWasPressed = gamepad1.rightBumperWasPressed();
+
+        switch (intake.getCurrentState()){
+            case FORWARD:
+                if (lbWasPressed) intake.setReadyState(Intake.IntakeState.REVERSE);
+                else if (rbWasPressed) intake.setReadyState(Intake.IntakeState.STOPPED);
+                break;
+            case STOPPED:
+                if (lbWasPressed) intake.setReadyState(Intake.IntakeState.REVERSE);
+                else if (rbWasPressed) intake.setReadyState(Intake.IntakeState.FORWARD);
+                break;
+            case REVERSE:
+                if (lbWasPressed) intake.setReadyState(Intake.IntakeState.STOPPED);
+                else if (rbWasPressed) intake.setReadyState(Intake.IntakeState.FORWARD);
+        }
+
+
     }
+
+
 
 }
