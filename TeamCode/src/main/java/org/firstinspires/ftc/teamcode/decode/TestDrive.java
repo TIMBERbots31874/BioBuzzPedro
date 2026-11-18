@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.biobuzz.Intake;
+import org.firstinspires.ftc.teamcode.biobuzz.Shooter;
 
 @TeleOp
 public class TestDrive  extends OpMode {
@@ -19,6 +20,9 @@ public class TestDrive  extends OpMode {
     private GoBildaPinpointDriver pinpoint;
     private Intake intake = new Intake();
 
+    private Shooter shooter = new Shooter();
+    private double shooterSpeed = 1300;  //this is where to change the speed was 1000
+
     Intake.IntakeState intakeState = STOPPED;
 
     public void init(){
@@ -27,6 +31,8 @@ public class TestDrive  extends OpMode {
         bot.setPose(new Pose(0,0,0));
 
         intake.init(hardwareMap);
+
+        shooter.init(hardwareMap);
     }
 
 
@@ -72,6 +78,15 @@ public class TestDrive  extends OpMode {
             case REVERSE:
                 if (lbWasPressed) intake.setReadyState(Intake.IntakeState.STOPPED);
                 else if (rbWasPressed) intake.setReadyState(Intake.IntakeState.FORWARD);
+        }
+
+
+        if (gamepad1.bWasPressed()){
+            if (shooter.getPower() == 0.0){
+                shooter.setVelocity(shooterSpeed);
+            }else{
+                shooter.setVelocity(0);
+            }
         }
 
 

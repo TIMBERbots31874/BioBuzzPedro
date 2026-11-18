@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class Shooter {
     public DcMotorEx shm;
 
-    public PIDFCoefficients pidf = new PIDFCoefficients(0, 0,0, 11);
+    public PIDFCoefficients pidf = new PIDFCoefficients(10, 0,0, 13);
 
     public void init(HardwareMap hwMap){
         shm = hwMap.get(DcMotorEx.class, "Shooter");
@@ -20,6 +20,14 @@ public class Shooter {
 
     public void setPower(double pow){
         shm.setPower(pow);
+    }
+
+    public void setVelocity(double vel){
+        shm.setVelocity(vel);
+    }
+
+    public double getPower(){
+        return shm.getPower();
     }
 
 }

@@ -15,7 +15,7 @@ public class TestShooter extends LinearOpMode {
 
         waitForStart();
 
-        sh.setPower(0.5);
+        sh.setVelocity(990);
 
         while (opModeIsActive()){
             telemetry.addData("Speed", sh.shm.getVelocity());
