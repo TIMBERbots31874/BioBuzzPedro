@@ -34,7 +34,7 @@ public class TuneShooter extends OpMode {
 
 
     public void init(){
-        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
+        shooter = hardwareMap.get(DcMotorEx.class, "Shooter");
         mConfig = shooter.getMotorType();
         telemetry.addData("Max RPM", mConfig.getMaxRPM());
         telemetry.addData("Ticks per Rev", mConfig.getTicksPerRev());
@@ -51,12 +51,13 @@ public class TuneShooter extends OpMode {
     public void start(){
         adj = new Adjuster(() -> gamepad1.dpadRightWasPressed(), () -> gamepad1.dpadLeftWasPressed(),
                 () -> gamepad1.dpadUpWasPressed(), () -> gamepad1.dpadDownWasPressed(),
-                new Pair<>("F", 13.0), new Pair<>("S", 0.00001));
+                new Pair<>("F", 13.0), new Pair<>("P", 0.00001));
         shooter.setVelocityPIDFCoefficients(adj.getValue("P"), 0, 0, adj.getValue("F"));
     }
 
     public void loop(){
         PIDFCoefficients currentPIDF = shooter.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        adj.update();
         telemetry.addData("Current", "P: %.5f  F: %.5f", currentPIDF.p, currentPIDF.f);
         telemetry.addData("Adjuster", adj);
 
@@ -73,7 +74,9 @@ public class TuneShooter extends OpMode {
         }
 
         if (running){
-            vList.add(shooter.getVelocity());
+            double v = shooter.getVelocity();
+            telemetry.addData("Velocity", v);
+            vList.add(v);
             while (vList.size() > 10) {vList.remove(0);}
             if (vList.size() == 10){
                 double sum = 0;
@@ -96,9 +99,19 @@ public class TuneShooter extends OpMode {
         }
 
         telemetry.addData("press A to start or stop running","");
+        telemetry.addData("Currently tuning", adj.getCurrentKey());
+        telemetry.addData("Press y to switch between f and p", "");
         telemetry.addData("Press X to load adjuster values to motor","");
         if (gamepad1.xWasPressed()){
             shooter.setVelocityPIDFCoefficients(adj.getValue("P"), 0, 0, adj.getValue("F"));
+        }
+
+        if (gamepad1.yWasPressed()){
+            if (adj.getCurrentKey().equals("F")){
+                adj.setCurrentKey("P");
+            } else {
+                adj.setCurrentKey("F");
+            }
         }
 
     }

@@ -25,7 +25,7 @@ public class BB_TeleOp extends OpMode {
     private Intake intake = new Intake();
 
     private Shooter shooter = new Shooter();
-    private double shooterSpeed = 1300;  //this is where to change the speed was 1000
+    private double shooterSpeed = 1300;  //this is where to change the speed, was 1000
 
     Intake.IntakeState intakeState = STOPPED;
 
