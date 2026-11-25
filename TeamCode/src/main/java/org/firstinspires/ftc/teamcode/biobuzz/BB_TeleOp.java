@@ -10,7 +10,6 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.decode.Motion;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @TeleOp
@@ -25,7 +24,10 @@ public class BB_TeleOp extends OpMode {
     private Intake intake = new Intake();
 
     private Shooter shooter = new Shooter();
-    private double shooterSpeed = 1300;  //this is where to change the speed, was 1000
+    private double highShooterSpeed = 1630;//this is where to change the speed, was 2000
+    private double lowShooterSpeed = 1401;
+
+    private double shooterSpeed = highShooterSpeed;
 
     Intake.IntakeState intakeState = STOPPED;
 
@@ -49,6 +51,8 @@ public class BB_TeleOp extends OpMode {
 
     public void loop(){
 
+        // HANDLE DRIVE TRAIN
+
         if(gamepad1.aWasPressed()){
             if(speedMode == SpeedMode.SLOW) speedMode = SpeedMode.MED;
             else if (speedMode == SpeedMode.MED) speedMode = SpeedMode.FAST;
@@ -70,9 +74,9 @@ public class BB_TeleOp extends OpMode {
         double scale = speedMode == SpeedMode.SLOW? 2.0
                 : speedMode == SpeedMode.MED? 1.5 : 1.0;
 
-        double px = -gamepad1.left_stick_y / scale;
-        double py = -gamepad1.left_stick_x / scale;
-        double pa = -gamepad1.right_stick_x / scale;
+        double px = -gamepad1.left_stick_y;
+        double py = -gamepad1.left_stick_x ;
+        double pa = gamepad1.left_trigger-gamepad1.right_trigger;
 
         DrivePowers drivePowers;
 
@@ -94,7 +98,7 @@ public class BB_TeleOp extends OpMode {
         telemetry.addData("pose","x: %.1f  y: %.1f  h: %.1f",
                 pose.x(),pose.y(),Math.toDegrees(pose.heading()));
 
-
+        // HANDLE INTAKE
 
         boolean lbWasPressed = gamepad1.leftBumperWasPressed();
         boolean rbWasPressed = gamepad1.rightBumperWasPressed();
@@ -114,9 +118,15 @@ public class BB_TeleOp extends OpMode {
         }
 
 
+        // HANDLE SHOOTER
+
+        if (gamepad1.dpadUpWasPressed()){
+            shooterSpeed = highShooterSpeed;
+        }
+
         if (gamepad1.bWasPressed()){
             if (shooter.getPower() == 0.0){
-                shooter.setVelocity(shooterSpeed);
+                shooter.setVelocity(highShooterSpeed);
             }else{
                 shooter.setVelocity(0);
             }
